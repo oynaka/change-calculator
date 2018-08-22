@@ -16,11 +16,17 @@ class CalculatorController extends Controller {
     private $data = array();
 
     public function init(Request $request) {
+
         $params = $request->all();
 
         $result = null;
         $user_input = null;
         if(isset($params['mode'])) {
+
+            $validatedData = $request->validate([
+                'user_input' => 'required|numeric|min:0',
+            ], $this->errorMessages() );
+
             $user_input = $params['user_input'];
             $result = $this->calculateChange($user_input);
         }
@@ -32,6 +38,7 @@ class CalculatorController extends Controller {
     }
 
     public function calculateChange($input) {
+
 
         $coins = array(  '100 Dollar Bill' => 100
                         ,'50 Dollar Bill' => 50
@@ -51,7 +58,6 @@ class CalculatorController extends Controller {
             $remainder = $input - $totalCoinValue;
             $numcoins = intval($remainder / $value);
             if($numcoins != 0) {
-                //echo $key." : ".$numcoins."<br>";
                 $output[$key] = $numcoins;
             }
             $totalCoinValue += $numcoins * $value;
@@ -59,5 +65,15 @@ class CalculatorController extends Controller {
 
         return $output;
     }
+
+    public function errorMessages()
+    {
+        return [
+            'user_input.required' => 'Please input amount.',
+            'user_input.numeric' => 'Please input amount in number only.',
+            'user_input.min' => 'Please input amount more than or equal 0.',
+        ];
+    }    
+
 
 }

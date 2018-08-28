@@ -56,6 +56,8 @@ class CalculatorController extends Controller {
 
         foreach($coins as $key => $value) {
             $remainder = $input - $totalCoinValue;
+            $remainder = round($remainder,2);
+            //echo $remainder.' ';
             $numcoins = intval($remainder / $value);
             if($numcoins != 0) {
                 $output[$key] = $numcoins;
